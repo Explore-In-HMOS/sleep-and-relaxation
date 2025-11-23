@@ -1,4 +1,3 @@
-import { router } from '@kit.ArkUI'
 import { ButtonIcon } from '../components/ButtonIcon'
 import { DataModel } from '../model/DataModel'
 
@@ -45,7 +44,7 @@ struct SleepPage {
               id: 0,
               image: this.parameter
             }
-            router.pushUrl({
+            this.getUIContext().getRouter().pushUrl({
               url: 'pages/SleepPlayPage',
               params: paramObject
             })

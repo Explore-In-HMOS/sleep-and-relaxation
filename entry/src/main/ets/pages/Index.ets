@@ -1,6 +1,4 @@
-import { router } from '@kit.ArkUI'
 import { ButtonIcon } from '../components/ButtonIcon'
-
 
 @Entry
 @Component
@@ -32,15 +30,15 @@ struct Index {
             .borderRadius(10)
           }.alignSelf(ItemAlign.Center).onClick(() => {
             if (id == 0) {
-              router.pushUrl({
-                url: 'pages/BreathPage',
+              this.getUIContext().getRouter().pushUrl({
+                url: 'pages/BreathPage'
               })
             } else if (id == 1) {
-              router.pushUrl({
-                url: 'pages/SleepPage',
+              this.getUIContext().getRouter().pushUrl({
+                url: 'pages/SleepPage'
               })
             } else if (id == 2) {
-              router.pushUrl({
+              this.getUIContext().getRouter().pushUrl({
                 url: 'pages/MeditationPage',
               })
             }

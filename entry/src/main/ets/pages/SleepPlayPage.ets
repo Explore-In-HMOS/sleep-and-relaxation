@@ -1,4 +1,3 @@
-import { router } from '@kit.ArkUI'
 import { DataModel } from '../model/DataModel'
 
 @Entry
@@ -9,7 +8,7 @@ struct SleepPlayPage {
   @State onLoop: boolean = false
 
   aboutToAppear(): void {
-    const temp = router.getParams() as DataModel
+    const temp = this.getUIContext().getRouter().getParams() as DataModel
     this.image = temp.image
   }
 
