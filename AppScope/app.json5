@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "com.hmosdemos.sleepandrelaxationsample",
+    "bundleName": "com.hmosdemos.wearable.sleep_and_relaxation",
     "vendor": "hmosdemos",
     "versionCode": 1000000,
     "versionName": "1.0.0",

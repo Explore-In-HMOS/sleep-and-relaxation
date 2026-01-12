@@ -1,66 +1,83 @@
 import { ButtonIcon } from '../components/ButtonIcon'
 import { DataModel } from '../model/DataModel'
 
-@Entry
+interface SleepItem {
+  key: string
+  text: ResourceStr
+  image: Resource
+}
+
 @Component
-struct SleepPage {
-  sleepText: Array<ResourceStr> = [
-    $r('app.string.sleep_msg_01'), $r('app.string.sleep_msg_02'), $r('app.string.sleep_msg_03')
+export struct SleepPage {
+  private sleepList: SleepItem[] = [
+    {
+      key: 'sleep_1',
+      text: $r('app.string.sleep_msg_01'),
+      image: $r('app.media.sleepSoundsImage')
+    },
+    {
+      key: 'sleep_2',
+      text: $r('app.string.sleep_msg_02'),
+      image: $r('app.media.sleepSoundsImage2')
+    },
+    {
+      key: 'sleep_3',
+      text: $r('app.string.sleep_msg_03'),
+      image: $r('app.media.sleepSoundsImage3')
+    }
   ]
   @State parameter: Resource = $r('app.media.sleepSoundsImage')
+  @Consume('pageStack') pageStack: NavPathStack
 
   build() {
-    Column() {
-      List({ space: 10 }) {
-        ForEach(this.sleepText, (item: string, id: number) => {
-          ListItem() {
-            Row({ space: 2 }) {
-              if (id == 0) {
-                ButtonIcon($r('app.media.sleepSoundsImage'))
-              } else if (id == 1) {
-                ButtonIcon($r('app.media.sleepSoundsImage2'))
-              } else if (id == 2) {
-                ButtonIcon($r('app.media.sleepSoundsImage3'))
+    NavDestination() {
+      Column() {
+        List({ space: 10 }) {
+          ForEach(
+            this.sleepList,
+            (item: SleepItem) => {
+              ListItem() {
+                Row({ space: 2 }) {
+                  ButtonIcon(item.image)
+                  Text(item.text)
+                    .fontColor(Color.White)
+                    .fontSize(12)
+                }
+                .width('60%')
+                .height('25%')
+                .alignItems(VerticalAlign.Center)
+                .justifyContent(FlexAlign.Start)
+                .backgroundColor($r('app.color.background_color'))
+                .borderRadius(10)
               }
-              Text(item).fontColor(Color.White).fontSize(12)
-            }
-            .width('60%')
-            .height('25%')
-            .alignItems(VerticalAlign.Center)
-            .justifyContent(FlexAlign.Start)
-            .backgroundColor($r('app.color.background_color'))
-            .borderRadius(10)
-          }.alignSelf(ItemAlign.Center).onClick(() => {
-            if (id == 0) {
-              this.parameter = $r('app.media.sleepSoundsImage')
-            } else if (id == 1) {
-              this.parameter = $r('app.media.sleepSoundsImage2')
-
-            } else if (id == 2) {
-              this.parameter = $r('app.media.sleepSoundsImage3')
-            }
-
-            const paramObject: DataModel = {
-              id: 0,
-              image: this.parameter
-            }
-            this.getUIContext().getRouter().pushUrl({
-              url: 'pages/SleepPlayPage',
-              params: paramObject
-            })
-          })
-        }, (item: string, id: number) => `${item}_${id}`)
+              .alignSelf(ItemAlign.Center)
+              .onClick(() => {
+                this.parameter = item.image
+                const paramObject: DataModel = {
+                  id: 0,
+                  image: this.parameter
+                }
+                this.pageStack.pushPathByName('SleepPlayPage', paramObject)
+              })
+            },
+            (item: SleepItem) => item.key
+          )
+        }
+        .width('100%')
+        .height('55%')
+        .scrollBar(BarState.Off)
+        .alignListItem(ListItemAlign.Center)
+        .alignSelf(ItemAlign.Center)
       }
       .width('100%')
-      .height('55%')
-      .scrollBar(BarState.Off)
-      .alignListItem(ListItemAlign.Center)
-      .alignSelf(ItemAlign.Center)
+      .height('100%')
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+      .backgroundColor(Color.White)
     }
-    .height('100%')
-    .width('100%')
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.Center)
-    .backgroundColor(Color.White)
+    .onReady((ctx: NavDestinationContext) => {
+      this.pageStack = ctx.pathStack
+    })
+    .hideBackButton(true)
   }
 }

@@ -63,7 +63,7 @@ The app is designed to be simple and easy to use, providing real-time relaxation
 
 - Huawei Watch 5
 
-# LICENSE
+# License
 
 **Sleep and Relaxation** is distributed under the terms of the MIT License.
 See the [license](/LICENSE) for more information.

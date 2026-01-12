@@ -1,55 +1,56 @@
 import { DataModel } from '../model/DataModel'
 
-
-@Entry
 @Component
-struct MeditationPlayPage {
+export struct MeditationPlayPage {
   @State image: Resource | null = null;
   @State currentText: ResourceStr = $r('app.string.waiting_msg')
   @State onLoop: boolean = false
-
-  aboutToAppear(): void {
-    const temp = this.getUIContext().getRouter().getParams() as DataModel
-    this.image = temp.image
-  }
+  @Consume('pageStack') pageStack: NavPathStack;
 
   build() {
-    Column({ space: 10 }) {
-      Image(this.image).objectFit(ImageFit.Contain)
-        .width('20%')
-        .height('20%')
+    NavDestination() {
+      Column({ space: 10 }) {
+        Image(this.image).objectFit(ImageFit.Contain)
+          .width('20%')
+          .height('20%')
 
-      Text(this.currentText).fontColor(Color.White).fontSize(12)
+        Text(this.currentText).fontColor(Color.White).fontSize(12)
 
-      if (this.onLoop) {
-        Image($r('app.media.pause'))
-          .objectFit(ImageFit.Contain)
-          .width('10%')
-          .height('10%')
-          .onClick(
-            () => {
-              this.onLoop = !this.onLoop
-              this.currentText = $r('app.string.waiting_msg');
-            }
-          )
-      } else {
-        Image($r('app.media.play'))
-          .objectFit(ImageFit.Contain)
-          .width('10%')
-          .height('10%')
-          .onClick(
-            () => {
-              this.onLoop = !this.onLoop
-              this.currentText = $r('app.string.focus_msg');
-            }
-          )
+        if (this.onLoop) {
+          Image($r('app.media.pause'))
+            .objectFit(ImageFit.Contain)
+            .width('10%')
+            .height('10%')
+            .onClick(
+              () => {
+                this.onLoop = !this.onLoop
+                this.currentText = $r('app.string.waiting_msg');
+              }
+            )
+        } else {
+          Image($r('app.media.play'))
+            .objectFit(ImageFit.Contain)
+            .width('10%')
+            .height('10%')
+            .onClick(
+              () => {
+                this.onLoop = !this.onLoop
+                this.currentText = $r('app.string.focus_msg');
+              }
+            )
+        }
       }
-    }
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.Center)
-    .width('100%')
-    .height('100%')
-    .backgroundColor($r('app.color.background_color'))
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+      .width('100%')
+      .height('100%')
+      .backgroundColor($r('app.color.background_color'))
+    }.onReady((ctx: NavDestinationContext) => {
+      this.pageStack = ctx.pathStack;
+      const params = ctx.pathInfo.param as DataModel;
+      this.image = params.image
+    })
+    .hideBackButton(true)
   }
 }
 

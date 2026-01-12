@@ -1,18 +1,15 @@
 import { DataModel } from '../model/DataModel'
 
-@Entry
 @Component
-struct SleepPlayPage {
+export struct SleepPlayPage {
   @State image: Resource | null = null;
   @State currentText: ResourceStr = $r('app.string.waiting_msg')
   @State onLoop: boolean = false
 
-  aboutToAppear(): void {
-    const temp = this.getUIContext().getRouter().getParams() as DataModel
-    this.image = temp.image
-  }
+  @Consume('pageStack') pageStack: NavPathStack;
 
   build() {
+    NavDestination() {
     Column({ space: 10 }) {
       Image(this.image).objectFit(ImageFit.Contain)
         .width('20%')
@@ -49,7 +46,12 @@ struct SleepPlayPage {
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.background_color'))
+    }.onReady((ctx: NavDestinationContext) => {
+      this.pageStack = ctx.pathStack;
+      const params = ctx.pathInfo.param as DataModel ;
+      this.image = params.image
+    })
+    .hideBackButton(true)
   }
 }
-
 

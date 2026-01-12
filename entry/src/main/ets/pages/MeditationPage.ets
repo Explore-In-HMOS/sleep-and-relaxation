@@ -1,66 +1,88 @@
 import { ButtonIcon } from '../components/ButtonIcon'
 import { DataModel } from '../model/DataModel'
 
-@Entry
+interface MeditationItem {
+  key: string
+  text: ResourceStr
+  image: Resource
+}
+
 @Component
-struct MeditationPage {
-  sleepText: Array<ResourceStr> = [
-    $r('app.string.med_msg_01'), $r('app.string.med_msg_02'), $r('app.string.med_msg_03')
+export struct MeditationPage {
+  private meditationList: MeditationItem[] = [
+    {
+      key: 'meditation_1',
+      text: $r('app.string.med_msg_01'),
+      image: $r('app.media.meditationImage1')
+    },
+    {
+      key: 'meditation_2',
+      text: $r('app.string.med_msg_02'),
+      image: $r('app.media.meditationImage2')
+    },
+    {
+      key: 'meditation_3',
+      text: $r('app.string.med_msg_03'),
+      image: $r('app.media.meditationImage3')
+    }
   ]
   @State parameter: Resource = $r('app.media.sleepSoundsImage')
+  @Consume('pageStack') pageStack: NavPathStack;
 
   build() {
-    Column() {
-      List({ space: 10 }) {
-        ForEach(this.sleepText, (item: string, id: number) => {
-          ListItem() {
-            Row({ space: 2 }) {
-              if (id == 0) {
-                ButtonIcon($r('app.media.meditationImage1'))
-              } else if (id == 1) {
-                ButtonIcon($r('app.media.meditationImage2'))
-              } else if (id == 2) {
-                ButtonIcon($r('app.media.meditationImage3'))
+    NavDestination() {
+      Column() {
+        List({ space: 10 }) {
+          ForEach(
+            this.meditationList,
+            (item: MeditationItem) => {
+              ListItem() {
+                Row({ space: 8 }) {
+                  ButtonIcon(item.image)
+
+                  Text(item.text)
+                    .fontColor(Color.White)
+                    .fontSize(12)
+                }
+                .width('60%')
+                .height('25%')
+                .alignItems(VerticalAlign.Center)
+                .justifyContent(FlexAlign.Start)
+                .backgroundColor($r('app.color.background_color'))
+                .borderRadius(10)
               }
-              Text(item).fontColor(Color.White).fontSize(12)
-            }
-            .width('60%')
-            .height('25%')
-            .alignItems(VerticalAlign.Center)
-            .justifyContent(FlexAlign.Start)
-            .backgroundColor($r('app.color.background_color'))
-            .borderRadius(10)
-          }.alignSelf(ItemAlign.Center).onClick(() => {
-            if (id == 0) {
-              this.parameter = $r('app.media.meditationImage1')
-            } else if (id == 1) {
-              this.parameter = $r('app.media.meditationImage2')
+              .alignSelf(ItemAlign.Center)
+              .onClick(() => {
+                this.parameter = item.image
+                const paramObject: DataModel = {
+                  id: 0,
+                  image: this.parameter
+                }
 
-            } else if (id == 2) {
-              this.parameter = $r('app.media.meditationImage3')
-            }
-
-            const paramObject: DataModel = {
-              id: 0,
-              image: this.parameter
-            }
-            this.getUIContext().getRouter().pushUrl({
-              url: 'pages/MeditationPlayPage',
-              params: paramObject
-            })
-          })
-        }, (item: string, id: number) => `${item}_${id}`)
+                this.pageStack.pushPathByName(
+                  'MeditationPlayPage',
+                  paramObject
+                )
+              })
+            },
+            (item: MeditationItem) => item.key
+          )
+        }
+        .width('100%')
+        .height('55%')
+        .scrollBar(BarState.Off)
+        .alignListItem(ListItemAlign.Center)
+        .alignSelf(ItemAlign.Center)
       }
       .width('100%')
-      .height('55%')
-      .scrollBar(BarState.Off)
-      .alignListItem(ListItemAlign.Center)
-      .alignSelf(ItemAlign.Center)
+      .height('100%')
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.Center)
+      .backgroundColor(Color.White)
     }
-    .height('100%')
-    .width('100%')
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.Center)
-    .backgroundColor(Color.White)
+    .onReady((ctx: NavDestinationContext) => {
+      this.pageStack = ctx.pathStack
+    })
+    .hideBackButton(true)
   }
 }
